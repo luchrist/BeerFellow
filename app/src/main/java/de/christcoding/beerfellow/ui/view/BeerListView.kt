@@ -14,6 +14,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -25,13 +27,18 @@ import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import de.christcoding.beerfellow.R
+import de.christcoding.beerfellow.model.BreedSize
 import de.christcoding.beerfellow.ui.components.BeerListItem
 import de.christcoding.beerfellow.ui.components.LoadingScreen
+import de.christcoding.beerfellow.ui.theme.Background
 import de.christcoding.beerfellow.ui.theme.Primary
 import de.christcoding.beerfellow.ui.theme.Secondary
 import de.christcoding.beerfellow.viewModel.BeersViewModel
@@ -44,6 +51,8 @@ fun BeerListView(navigateToDetailsView: (String) -> Unit) {
     val beersState = vm.beersState
     val searchText by vm.searchText.collectAsState()
     val shownBreeds by vm.shownBreeds.collectAsState()
+    var filtersShown by remember { mutableStateOf(false) }
+    val sizeFilter by vm.sizeFilter.collectAsState()
 
     Scaffold(
         topBar = {
@@ -68,7 +77,9 @@ fun BeerListView(navigateToDetailsView: (String) -> Unit) {
                         .fillMaxSize()
                         .padding(it)
                 ) {
-                    Row(horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth().padding(start = 8.dp, end = 8.dp)) {
+                    Row(horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 8.dp, end = 8.dp)) {
                         TextField(
                             value = searchText,
                             onValueChange = vm::onSearchTextChanged,
@@ -93,7 +104,7 @@ fun BeerListView(navigateToDetailsView: (String) -> Unit) {
                                 }
                             },
                         )
-                        IconButton(onClick = {}) {
+                        IconButton(onClick = {filtersShown = !filtersShown}) {
                             Icon(
                                 painter = painterResource(id = R.drawable.baseline_filter_list_24),
                                 modifier = Modifier.size(24.dp),
@@ -102,8 +113,48 @@ fun BeerListView(navigateToDetailsView: (String) -> Unit) {
                             )
                         }
                     }
-                    LazyRow {
-
+                    if (filtersShown) {
+                        Row (
+                            Modifier
+                                .fillMaxWidth()
+                                .padding(8.dp), horizontalArrangement = Arrangement.SpaceEvenly){
+                            Button(onClick = { vm.onSizeFilterChanged(BreedSize.SMALL) }) {
+                                Text(text = "Small")
+                                if(sizeFilter == BreedSize.SMALL) {
+                                    IconButton(onClick = { vm.onSizeFilterChanged(BreedSize.NONE) }, modifier = Modifier.size(24.dp)) {
+                                        Icon(
+                                            Icons.Default.Close,
+                                            contentDescription = null,
+                                            tint = Background
+                                        )
+                                    }
+                                }
+                            }
+                            Button(onClick = {vm.onSizeFilterChanged(BreedSize.MEDIUM)}) {
+                                Text(text = "Medium")
+                                if(sizeFilter == BreedSize.MEDIUM) {
+                                    IconButton(onClick = { vm.onSizeFilterChanged(BreedSize.NONE) }, modifier = Modifier.size(24.dp)) {
+                                        Icon(
+                                            Icons.Default.Close,
+                                            contentDescription = null,
+                                            tint = Background
+                                        )
+                                    }
+                                }
+                            }
+                            Button(onClick = { vm.onSizeFilterChanged(BreedSize.LARGE) }) {
+                                Text(text = "Large")
+                                if(sizeFilter == BreedSize.LARGE) {
+                                    IconButton(onClick = { vm.onSizeFilterChanged(BreedSize.NONE) }, modifier = Modifier.size(24.dp)) {
+                                        Icon(
+                                            Icons.Default.Close,
+                                            contentDescription = null,
+                                            tint = Background
+                                        )
+                                    }
+                                }
+                            }
+                        }
                     }
                     LazyColumn() {
                         items(shownBreeds) { beer ->

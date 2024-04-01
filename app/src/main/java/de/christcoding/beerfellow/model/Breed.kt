@@ -16,6 +16,21 @@ data class Breed(
     fun doesMatchSearch(query: String): Boolean {
         return name.contains(query, ignoreCase = true)
     }
+
+    fun hasSize(size: BreedSize): Boolean {
+        return when (size) {
+            BreedSize.SMALL -> minHeightInCm() < 25
+            BreedSize.MEDIUM -> minHeightInCm() in 25..45
+            BreedSize.LARGE -> minHeightInCm() > 40
+            else -> {
+                true
+            }
+        }
+    }
+
+    private fun minHeightInCm(): Int{
+        return height.metric.split(" ")[0].toInt()
+    }
 }
 
 data class Height(

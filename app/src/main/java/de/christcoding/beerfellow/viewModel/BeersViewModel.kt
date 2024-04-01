@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import de.christcoding.beerfellow.model.Beer
 import de.christcoding.beerfellow.model.Breed
+import de.christcoding.beerfellow.model.BreedSize
 import de.christcoding.beerfellow.network.TheDogApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -20,6 +21,9 @@ class BeersViewModel : ViewModel() {
     private val _searchText = MutableStateFlow("")
     val searchText = _searchText.asStateFlow()
 
+    private val _sizeFilter = MutableStateFlow(BreedSize.NONE)
+    val sizeFilter = _sizeFilter.asStateFlow()
+
     private var allBreeds = MutableStateFlow(listOf<Breed>())
 
     var currentBeerState: CurrentBeerState by mutableStateOf(CurrentBeerState.Loading)
@@ -28,19 +32,28 @@ class BeersViewModel : ViewModel() {
     var beersState: BreedState by mutableStateOf(BreedState.Loading)
         private set
 
-    private val _breeds = MutableStateFlow(listOf<Breed>())
-    val shownBreeds = searchText
-        .combine(allBreeds) { query, breeds ->
+    val shownBreeds = sizeFilter
+        .combine(allBreeds) { size, breeds ->
+            if (size == BreedSize.NONE) {
+                breeds
+            } else
+                breeds.filter { it.hasSize(size) }
+        }
+        .combine(_searchText) { breeds, query ->
             if (query.isBlank()) {
                 breeds
-            }
-            breeds.filter { it.doesMatchSearch(query) }
+            } else
+                breeds.filter { it.doesMatchSearch(query) }
         }
         .stateIn(
             viewModelScope,
             started = SharingStarted.WhileSubscribed(5000),
             initialValue = emptyList()
         )
+
+    fun onSizeFilterChanged(size: BreedSize) {
+        _sizeFilter.value = size
+    }
 
     init {
         loadBeers()
