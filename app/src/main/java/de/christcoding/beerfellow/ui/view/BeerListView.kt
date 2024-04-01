@@ -1,26 +1,39 @@
 package de.christcoding.beerfellow.ui.view
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import de.christcoding.beerfellow.R
 import de.christcoding.beerfellow.ui.components.BeerListItem
 import de.christcoding.beerfellow.ui.components.LoadingScreen
+import de.christcoding.beerfellow.ui.theme.Primary
+import de.christcoding.beerfellow.ui.theme.Secondary
 import de.christcoding.beerfellow.viewModel.BeersViewModel
 import de.christcoding.beerfellow.viewModel.BreedState
 
@@ -29,8 +42,17 @@ import de.christcoding.beerfellow.viewModel.BreedState
 fun BeerListView(navigateToDetailsView: (String) -> Unit) {
     val vm: BeersViewModel = viewModel()
     val beersState = vm.beersState
+    val searchText by vm.searchText.collectAsState()
+    val shownBreeds by vm.shownBreeds.collectAsState()
 
-    Scaffold(topBar = { CenterAlignedTopAppBar(title = { Text(text = "BEER") }) }) {
+    Scaffold(
+        topBar = {
+            CenterAlignedTopAppBar(
+                title = { Text(text = "BREEDS", color = Secondary) },
+                modifier = Modifier.background(color = Secondary, shape = RoundedCornerShape(16.dp))
+            )
+        }
+    ) {
         when (beersState) {
             is BreedState.Loading -> {
                 LoadingScreen(modifier = Modifier.fillMaxSize())
@@ -46,23 +68,48 @@ fun BeerListView(navigateToDetailsView: (String) -> Unit) {
                         .fillMaxSize()
                         .padding(it)
                 ) {
-                    Row(horizontalArrangement = Arrangement.SpaceBetween) {
-                        //SearchBar(query = , onQueryChange = , onSearch = , active = , onActiveChange = ) {
-
-                        // }
+                    Row(horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth().padding(start = 8.dp, end = 8.dp)) {
+                        TextField(
+                            value = searchText,
+                            onValueChange = vm::onSearchTextChanged,
+                            placeholder = { Text("Search") },
+                            modifier = Modifier.weight(1f),
+                            leadingIcon = {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.baseline_search_24),
+                                    contentDescription = null,
+                                    tint = Secondary
+                                )
+                            },
+                            trailingIcon = {
+                                if (searchText.isNotBlank()) {
+                                    IconButton(onClick = { vm.clearSearch() }) {
+                                        Icon(
+                                            Icons.Default.Close,
+                                            contentDescription = null,
+                                            tint = Secondary
+                                        )
+                                    }
+                                }
+                            },
+                        )
                         IconButton(onClick = {}) {
                             Icon(
                                 painter = painterResource(id = R.drawable.baseline_filter_list_24),
-                                contentDescription = null
+                                modifier = Modifier.size(24.dp),
+                                contentDescription = null,
+                                tint = Secondary
                             )
                         }
                     }
                     LazyRow {
 
                     }
-                    LazyColumn (){
-                        items(beersState.breeds) { beer ->
-                            BeerListItem(beer = beer, showDetails = { navigateToDetailsView(beer.id.toString()) })
+                    LazyColumn() {
+                        items(shownBreeds) { beer ->
+                            BeerListItem(
+                                beer = beer,
+                                showDetails = { navigateToDetailsView(beer.id.toString()) })
                         }
                     }
                 }

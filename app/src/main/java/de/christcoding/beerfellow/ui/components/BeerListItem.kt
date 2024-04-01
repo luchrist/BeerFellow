@@ -1,5 +1,6 @@
 package de.christcoding.beerfellow.ui.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -10,18 +11,15 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowRight
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardColors
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import de.christcoding.beerfellow.R
 import de.christcoding.beerfellow.model.Breed
@@ -31,31 +29,25 @@ import de.christcoding.beerfellow.ui.theme.Secondary
 
 @Composable
 fun BeerListItem(beer: Breed, showDetails: () -> Unit) {
-    Card (modifier = Modifier
-        .fillMaxWidth()
-        .clip(RoundedCornerShape(8.dp))
-        .padding(8.dp),
-        colors = CardColors(containerColor = Primary, contentColor = Secondary, disabledContentColor = Secondary, disabledContainerColor = Primary),
-        elevation = CardDefaults.cardElevation(4.dp),) {
         Row (horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(8.dp))
-            .padding(8.dp)) {
+            .padding(8.dp)
+            .background(color = Primary, shape = RoundedCornerShape(16.dp))) {
             if(beer.image != null)
-                AsyncImage(model = beer.image!!.url, contentDescription = "Beer Image", modifier = Modifier.size(100.dp),
+                AsyncImage(model = beer.image!!.url, contentDescription = "Beer Image", modifier = Modifier.size(120.dp).padding(8.dp),
                     placeholder = painterResource(R.drawable.baseline_cloud_off_24), error = painterResource(R.drawable.baseline_cloud_off_24))
             else
-                Icon(painter = painterResource(R.drawable.baseline_cloud_off_24), contentDescription = "Beer Image", modifier = Modifier.size(100.dp))
-            Column {
-                Text(text = beer.name, color = Background)
+                Icon(painter = painterResource(R.drawable.baseline_cloud_off_24), contentDescription = "Beer Image", modifier = Modifier.size(100.dp).padding(8.dp))
+            Column (verticalArrangement = Arrangement.SpaceEvenly, modifier = Modifier.size(width = 200.dp, height = 120.dp)){
+                Text(text = beer.name, color = Background, fontSize = 20.sp, modifier = Modifier.padding(top = 8.dp))
                 if(beer.origin != null)
-                    Text(text = beer.origin)
+                    Text(text = beer.origin, color = Secondary)
             }
             IconButton(modifier = Modifier
                 .fillMaxHeight()
-                .align(Alignment.CenterVertically), onClick = { showDetails() }) {
-                Icon(Icons.Default.KeyboardArrowRight, contentDescription = "Details")
+                .align(Alignment.CenterVertically)
+                .background(Secondary), onClick = { showDetails() }) {
+                Icon(Icons.Default.KeyboardArrowRight, contentDescription = "Details", tint = Background)
             }
         }
-    }
 }

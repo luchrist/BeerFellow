@@ -19,12 +19,14 @@ private val DarkColorScheme = darkColorScheme(
     primary = Primary,
     secondary = Background,
     background = Secondary,
+    surface = Primary,
 )
 
 private val LightColorScheme = lightColorScheme(
     primary = Primary,
     secondary = Secondary,
     background = Background,
+    surface = Primary,
     /* Other default colors to override
     background = Color(0xFFFFFBFE),
     surface = Color(0xFFFFFBFE),
@@ -56,7 +58,7 @@ fun BeerFellowTheme(
     if (!view.isInEditMode) {
         SideEffect {
             val window = (view.context as Activity).window
-            window.statusBarColor = colorScheme.primary.toArgb()
+            window.statusBarColor = Secondary.toArgb()
             WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = darkTheme
         }
     }

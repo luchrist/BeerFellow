@@ -12,7 +12,11 @@ data class Breed(
     val temperament: String?,
     val weight: Weight,
     var image: DogImage?
-)
+) {
+    fun doesMatchSearch(query: String): Boolean {
+        return name.contains(query, ignoreCase = true)
+    }
+}
 
 data class Height(
     val imperial: String,
