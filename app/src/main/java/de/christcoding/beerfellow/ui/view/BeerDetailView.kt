@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
@@ -32,7 +31,6 @@ import de.christcoding.beerfellow.ui.theme.Primary
 import de.christcoding.beerfellow.ui.theme.Secondary
 import de.christcoding.beerfellow.viewModel.BeersViewModel
 import de.christcoding.beerfellow.viewModel.CurrentBeerState
-import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -63,7 +61,7 @@ fun BeerDetailView(beerId: String, popBackStack: () -> Boolean) {
     ) {
         when (breedState) {
             is CurrentBeerState.Loading -> {
-                LoadingScreen(modifier = Modifier.fillMaxSize())
+                LoadingScreen(modifier = Modifier.fillMaxSize().background(color = Background))
             }
 
             is CurrentBeerState.Error -> {
@@ -140,7 +138,12 @@ fun BeerDetailView(beerId: String, popBackStack: () -> Boolean) {
                             .fillMaxWidth()
                             .padding(start = 16.dp, end = 16.dp, bottom = 8.dp)
                     ) {
-                        Text(text = "Adopt me", color = Primary, fontSize = 20.sp, modifier = Modifier.padding(8.dp))
+                        Text(
+                            text = "Adopt me",
+                            color = Primary,
+                            fontSize = 20.sp,
+                            modifier = Modifier.padding(8.dp)
+                        )
                     }
                 }
             }

@@ -29,25 +29,52 @@ import de.christcoding.beerfellow.ui.theme.Secondary
 
 @Composable
 fun BeerListItem(beer: Breed, showDetails: () -> Unit) {
-        Row (horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier
+    Row(
+        horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
-            .background(color = Primary, shape = RoundedCornerShape(16.dp))) {
-            if(beer.image != null)
-                AsyncImage(model = beer.image!!.url, contentDescription = "Beer Image", modifier = Modifier.size(120.dp).padding(8.dp),
-                    placeholder = painterResource(R.drawable.baseline_cloud_off_24), error = painterResource(R.drawable.baseline_cloud_off_24))
-            else
-                Icon(painter = painterResource(R.drawable.baseline_cloud_off_24), contentDescription = "Beer Image", modifier = Modifier.size(100.dp).padding(8.dp))
-            Column (verticalArrangement = Arrangement.SpaceEvenly, modifier = Modifier.size(width = 200.dp, height = 120.dp)){
-                Text(text = beer.name, color = Background, fontSize = 20.sp, modifier = Modifier.padding(top = 8.dp))
-                if(beer.origin != null)
-                    Text(text = beer.origin, color = Secondary)
-            }
-            IconButton(modifier = Modifier
-                .fillMaxHeight()
-                .align(Alignment.CenterVertically)
-                .background(Secondary), onClick = { showDetails() }) {
-                Icon(Icons.Default.KeyboardArrowRight, contentDescription = "Details", tint = Background)
-            }
+            .background(color = Primary, shape = RoundedCornerShape(16.dp))
+    ) {
+        if (beer.image != null)
+            AsyncImage(
+                model = beer.image!!.url,
+                contentDescription = "Beer Image",
+                modifier = Modifier
+                    .size(120.dp)
+                    .padding(8.dp),
+                placeholder = painterResource(R.drawable.baseline_cloud_off_24),
+                error = painterResource(R.drawable.baseline_cloud_off_24)
+            )
+        else
+            Icon(
+                painter = painterResource(R.drawable.baseline_cloud_off_24),
+                contentDescription = "Beer Image",
+                modifier = Modifier
+                    .size(100.dp)
+                    .padding(8.dp)
+            )
+        Column(
+            verticalArrangement = Arrangement.SpaceEvenly,
+            modifier = Modifier.size(width = 200.dp, height = 120.dp)
+        ) {
+            Text(
+                text = beer.name,
+                color = Background,
+                fontSize = 20.sp,
+                modifier = Modifier.padding(top = 8.dp)
+            )
+            if (beer.origin != null)
+                Text(text = beer.origin, color = Secondary)
         }
+        IconButton(modifier = Modifier
+            .fillMaxHeight()
+            .align(Alignment.CenterVertically)
+            .background(Secondary), onClick = { showDetails() }) {
+            Icon(
+                Icons.Default.KeyboardArrowRight,
+                contentDescription = "Details",
+                tint = Background
+            )
+        }
+    }
 }

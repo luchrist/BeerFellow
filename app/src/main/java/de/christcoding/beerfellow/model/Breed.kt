@@ -37,7 +37,7 @@ data class Breed(
         }
     }
 
-    private fun minHeightInCm(): Int{
+    private fun minHeightInCm(): Int {
         return height.metric.split(" ")[0].toInt()
     }
 }

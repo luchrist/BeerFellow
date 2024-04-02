@@ -26,7 +26,6 @@ private val retrofit = Retrofit.Builder()
     .baseUrl(BASE_URL)
     .addConverterFactory(MoshiConverterFactory.create(moshi))
     .client(client)
-    //.addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
     .build()
 
 interface TheDogApiService {

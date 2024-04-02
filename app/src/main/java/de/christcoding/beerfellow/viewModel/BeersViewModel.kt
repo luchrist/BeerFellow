@@ -5,7 +5,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import de.christcoding.beerfellow.model.Beer
 import de.christcoding.beerfellow.model.Breed
 import de.christcoding.beerfellow.model.BreedSize
 import de.christcoding.beerfellow.network.TheDogApi
