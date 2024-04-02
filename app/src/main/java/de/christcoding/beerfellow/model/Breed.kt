@@ -28,6 +28,15 @@ data class Breed(
         }
     }
 
+    fun getSize(): BreedSize {
+        return when {
+            minHeightInCm() < 25 -> BreedSize.SMALL
+            minHeightInCm() in 25..45 -> BreedSize.MEDIUM
+            minHeightInCm() > 40 -> BreedSize.LARGE
+            else -> BreedSize.NONE
+        }
+    }
+
     private fun minHeightInCm(): Int{
         return height.metric.split(" ")[0].toInt()
     }

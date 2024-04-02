@@ -33,6 +33,9 @@ interface TheDogApiService {
     @GET("breeds")
     suspend fun getBreeds(): List<Breed>
 
+    @GET("breeds/{id}")
+    suspend fun getBreed(@Path("id") id: String): Breed
+
     @GET("images/{id}")
     suspend fun getImage(@Path("id") id: String): DogImage
 }

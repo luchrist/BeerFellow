@@ -21,7 +21,7 @@ fun Navigation(context: Context,
 
     NavHost(navController = navController, startDestination = startDestination) {
         composable(Screen.BeersListScreen.route) {
-            BeerListView{id: String -> navController.navigate("${Screen.BeerDetailScreen.route}/$id")}
+            BeerListView(navigateToDetailsView = {id: String -> navController.navigate("${Screen.BeerDetailScreen.route}/$id")})
         }
         composable("${Screen.BeerDetailScreen.route}/{beerId}") {
             BeerDetailView(it.arguments?.getString("beerId") ?: "0") { navController.popBackStack() }

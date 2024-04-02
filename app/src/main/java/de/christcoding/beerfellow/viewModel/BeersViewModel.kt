@@ -18,6 +18,8 @@ import kotlinx.coroutines.launch
 
 class BeersViewModel : ViewModel() {
 
+    var title = mutableStateOf("BREEDS")
+
     private val _searchText = MutableStateFlow("")
     val searchText = _searchText.asStateFlow()
 
@@ -67,6 +69,36 @@ class BeersViewModel : ViewModel() {
         _searchText.value = ""
     }
 
+    private var firstLoading = mutableStateOf(true)
+
+    fun loadBreed(breedId: String) {
+        if (!firstLoading.value) {
+            return
+        }
+        firstLoading.value = false
+        viewModelScope.launch {
+            currentBeerState = try {
+                val beer = TheDogApi.retrofitService.getBreed(breedId)
+                loadImage(beer)
+                title.value = beer.name
+                CurrentBeerState.Success(beer)
+            } catch (e: Exception) {
+                CurrentBeerState.Error(e.message ?: "An error occurred")
+            }
+        }
+    }
+
+    private fun loadImage(breed: Breed) {
+        viewModelScope.launch {
+            try {
+                val image = TheDogApi.retrofitService.getImage(breed.reference_image_id)
+                breed.image = image
+                currentBeerState = CurrentBeerState.Success(breed)
+            } catch (_: Exception) {
+            }
+        }
+    }
+
     private fun loadBeers() {
         viewModelScope.launch {
             beersState = try {
@@ -102,7 +134,7 @@ sealed interface BreedState {
 }
 
 sealed interface CurrentBeerState {
-    data class Success(val beer: Beer) : CurrentBeerState
+    data class Success(val breed: Breed) : CurrentBeerState
     object Loading : CurrentBeerState
     data class Error(val message: String) : CurrentBeerState
 }

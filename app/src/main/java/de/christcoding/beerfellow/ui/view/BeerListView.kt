@@ -3,27 +3,30 @@ package de.christcoding.beerfellow.ui.view
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.TopAppBarColors
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -39,7 +42,6 @@ import de.christcoding.beerfellow.model.BreedSize
 import de.christcoding.beerfellow.ui.components.BeerListItem
 import de.christcoding.beerfellow.ui.components.LoadingScreen
 import de.christcoding.beerfellow.ui.theme.Background
-import de.christcoding.beerfellow.ui.theme.Primary
 import de.christcoding.beerfellow.ui.theme.Secondary
 import de.christcoding.beerfellow.viewModel.BeersViewModel
 import de.christcoding.beerfellow.viewModel.BreedState
@@ -57,8 +59,11 @@ fun BeerListView(navigateToDetailsView: (String) -> Unit) {
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
-                title = { Text(text = "BREEDS", color = Secondary) },
-                modifier = Modifier.background(color = Secondary, shape = RoundedCornerShape(16.dp))
+                title = { Text(text = "BREEDS") },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = Secondary,
+                    titleContentColor = Background
+                )
             )
         }
     ) {
@@ -76,15 +81,27 @@ fun BeerListView(navigateToDetailsView: (String) -> Unit) {
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(it)
+                        .background(color = Background)
                 ) {
-                    Row(horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(start = 8.dp, end = 8.dp)) {
+                    Row(
+                        horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(start = 8.dp, end = 8.dp)
+                    ) {
                         TextField(
                             value = searchText,
                             onValueChange = vm::onSearchTextChanged,
                             placeholder = { Text("Search") },
                             modifier = Modifier.weight(1f),
+                            colors = TextFieldDefaults.colors(
+                                focusedTextColor = Secondary,
+                                unfocusedTextColor = Secondary,
+                                focusedContainerColor = Background,
+                                unfocusedContainerColor = Background,
+                                cursorColor = Secondary,
+                                focusedIndicatorColor = Secondary,
+                                unfocusedIndicatorColor = Secondary,
+                            ),
                             leadingIcon = {
                                 Icon(
                                     painter = painterResource(id = R.drawable.baseline_search_24),
@@ -104,7 +121,7 @@ fun BeerListView(navigateToDetailsView: (String) -> Unit) {
                                 }
                             },
                         )
-                        IconButton(onClick = {filtersShown = !filtersShown}) {
+                        IconButton(onClick = { filtersShown = !filtersShown }) {
                             Icon(
                                 painter = painterResource(id = R.drawable.baseline_filter_list_24),
                                 modifier = Modifier.size(24.dp),
@@ -114,14 +131,24 @@ fun BeerListView(navigateToDetailsView: (String) -> Unit) {
                         }
                     }
                     if (filtersShown) {
-                        Row (
+                        Row(
                             Modifier
                                 .fillMaxWidth()
-                                .padding(8.dp), horizontalArrangement = Arrangement.SpaceEvenly){
-                            Button(onClick = { vm.onSizeFilterChanged(BreedSize.SMALL) }) {
+                                .padding(8.dp), horizontalArrangement = Arrangement.SpaceEvenly
+                        ) {
+                            Button(
+                                onClick = { vm.onSizeFilterChanged(BreedSize.SMALL) },
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = if (sizeFilter == BreedSize.SMALL) Secondary else Background,
+                                    contentColor = if (sizeFilter == BreedSize.SMALL) Background else Secondary
+                                )
+                            ) {
                                 Text(text = "Small")
-                                if(sizeFilter == BreedSize.SMALL) {
-                                    IconButton(onClick = { vm.onSizeFilterChanged(BreedSize.NONE) }, modifier = Modifier.size(24.dp)) {
+                                if (sizeFilter == BreedSize.SMALL) {
+                                    IconButton(
+                                        onClick = { vm.onSizeFilterChanged(BreedSize.NONE) },
+                                        modifier = Modifier.size(24.dp)
+                                    ) {
                                         Icon(
                                             Icons.Default.Close,
                                             contentDescription = null,
@@ -130,10 +157,19 @@ fun BeerListView(navigateToDetailsView: (String) -> Unit) {
                                     }
                                 }
                             }
-                            Button(onClick = {vm.onSizeFilterChanged(BreedSize.MEDIUM)}) {
+                            Button(
+                                onClick = { vm.onSizeFilterChanged(BreedSize.MEDIUM) },
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = if (sizeFilter == BreedSize.MEDIUM) Secondary else Background,
+                                    contentColor = if (sizeFilter == BreedSize.MEDIUM) Background else Secondary
+                                )
+                            ) {
                                 Text(text = "Medium")
-                                if(sizeFilter == BreedSize.MEDIUM) {
-                                    IconButton(onClick = { vm.onSizeFilterChanged(BreedSize.NONE) }, modifier = Modifier.size(24.dp)) {
+                                if (sizeFilter == BreedSize.MEDIUM) {
+                                    IconButton(
+                                        onClick = { vm.onSizeFilterChanged(BreedSize.NONE) },
+                                        modifier = Modifier.size(24.dp)
+                                    ) {
                                         Icon(
                                             Icons.Default.Close,
                                             contentDescription = null,
@@ -142,10 +178,19 @@ fun BeerListView(navigateToDetailsView: (String) -> Unit) {
                                     }
                                 }
                             }
-                            Button(onClick = { vm.onSizeFilterChanged(BreedSize.LARGE) }) {
+                            Button(
+                                onClick = { vm.onSizeFilterChanged(BreedSize.LARGE) },
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = if (sizeFilter == BreedSize.LARGE) Secondary else Background,
+                                    contentColor = if (sizeFilter == BreedSize.LARGE) Background else Secondary
+                                )
+                            ) {
                                 Text(text = "Large")
-                                if(sizeFilter == BreedSize.LARGE) {
-                                    IconButton(onClick = { vm.onSizeFilterChanged(BreedSize.NONE) }, modifier = Modifier.size(24.dp)) {
+                                if (sizeFilter == BreedSize.LARGE) {
+                                    IconButton(
+                                        onClick = { vm.onSizeFilterChanged(BreedSize.NONE) },
+                                        modifier = Modifier.size(24.dp)
+                                    ) {
                                         Icon(
                                             Icons.Default.Close,
                                             contentDescription = null,
