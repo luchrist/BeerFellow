@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
 
 class BeersViewModel : ViewModel() {
 
-    var title = mutableStateOf("BREEDS")
+    var title by mutableStateOf("BREEDS")
 
     private val _searchText = MutableStateFlow("")
     val searchText = _searchText.asStateFlow()
@@ -79,7 +79,7 @@ class BeersViewModel : ViewModel() {
             currentBeerState = try {
                 val beer = TheDogApi.retrofitService.getBreed(breedId)
                 loadImage(beer)
-                title.value = beer.name
+                title = beer.name
                 CurrentBeerState.Success(beer)
             } catch (e: Exception) {
                 CurrentBeerState.Error(e.message ?: "An error occurred")

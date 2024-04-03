@@ -42,7 +42,7 @@ fun BeerDetailView(beerId: String, popBackStack: () -> Boolean) {
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
-                title = { Text(text = vm.title.value) },
+                title = { Text(text = vm.title) },
                 navigationIcon = {
                     IconButton(onClick = { popBackStack() }) {
                         Icon(
@@ -69,14 +69,15 @@ fun BeerDetailView(beerId: String, popBackStack: () -> Boolean) {
             }
 
             is CurrentBeerState.Success -> {
+                val breed = breedState.breed
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
                         .background(color = Background)
                 ) {
-                    if (breedState.breed.image != null)
+                    if (breed.image != null)
                         AsyncImage(
-                            model = breedState.breed.image!!.url,
+                            model = breed.image!!.url,
                             contentDescription = "Beer Image",
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -98,35 +99,35 @@ fun BeerDetailView(beerId: String, popBackStack: () -> Boolean) {
                             .weight(0.5f), horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text(
-                            text = breedState.breed.name,
+                            text = breed.name,
                             modifier = Modifier.padding(8.dp),
                             fontSize = 25.sp,
                             color = Secondary
                         )
-                        if (breedState.breed.origin != null)
+                        if (breed.origin != null)
                             Text(
-                                text = breedState.breed.origin,
+                                text = breed.origin,
                                 modifier = Modifier.padding(8.dp),
                                 color = Secondary
                             )
                         Text(
-                            text = "Size Category: ${breedState.breed.getSize()}",
+                            text = "Size Category: ${breed.getSize()}",
                             modifier = Modifier.padding(8.dp),
                             color = Secondary
                         )
                         Text(
-                            text = "Size: ${breedState.breed.height.metric} cm",
+                            text = "Size: ${breed.height.metric} cm",
                             modifier = Modifier.padding(8.dp),
                             color = Secondary
                         )
                         Text(
-                            text = "Weight: ${breedState.breed.weight.metric} kg",
+                            text = "Weight: ${breed.weight.metric} kg",
                             modifier = Modifier.padding(8.dp),
                             color = Secondary
                         )
 
                         Text(
-                            text = "Life expectancy: ${breedState.breed.life_span}",
+                            text = "Life expectancy: ${breed.life_span}",
                             modifier = Modifier.padding(8.dp),
                             color = Secondary
                         )
